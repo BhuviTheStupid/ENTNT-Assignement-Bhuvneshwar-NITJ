@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BarLoader } from "react-spinners";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
-import { ClipboardCheck, Trash } from "lucide-react";
+import { ClipboardCheck, Trash, Edit, PenBox } from "lucide-react"; // Add the Edit icon here
 import { Button } from "@/components/ui/button";
 
 import useFetch from "@/hooks/use-fetch";
@@ -71,14 +71,9 @@ const AssessmentPage = () => {
   };
 
   const handleAddNewQuestion = async () => {
-    console.log("Button Clicked.");
-    // if (!user?.session?.jwtToken) {
-    //   console.log("Error in sessionToken");
-    //   return;}
     setAdding(true);
     const token = "";
     try {
-      // Pass `assessment_id` as the first argument in `addNewQuestion`
       const result = await addNewQuestion(token, { ...newQuestion, assessment_id: id });
       if (result) {
         setQuestions([...questions, result]);
@@ -90,16 +85,15 @@ const AssessmentPage = () => {
       setAdding(false);
     }
   };
-  
 
   if (loadingAssessment || loadingQuestions || loadingJob || !assessments || !questions) {
     return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
   }
 
   return (
-    <div className="flex flex-col gap-8 mt-5">
+    <div className="p-4 bg-gray-900 min-h-screen">
       <div className="flex flex-col-reverse gap-6 md:flex-row justify-between items-center">
-        <h1 className="gradient-title font-extrabold pb-3 text-4xl sm:text-6xl text-white">
+        <h1 className="font-extrabold text-4xl sm:text-6xl text-white pb-3">
           {jobs?.name || "Untitled Assessment"}
         </h1>
       </div>
@@ -112,13 +106,47 @@ const AssessmentPage = () => {
 
       <div className="mt-6">
         <h2 className="font-bold text-xl text-white">Add New Question</h2>
-        <div className="flex flex-col gap-2 mt-2">
-          <input type="text" placeholder="Question" value={newQuestion.question} onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })} className="input" />
-          <input type="text" placeholder="Option A" value={newQuestion.op1} onChange={(e) => setNewQuestion({ ...newQuestion, op1: e.target.value })} className="input" />
-          <input type="text" placeholder="Option B" value={newQuestion.op2} onChange={(e) => setNewQuestion({ ...newQuestion, op2: e.target.value })} className="input" />
-          <input type="text" placeholder="Option C" value={newQuestion.op3} onChange={(e) => setNewQuestion({ ...newQuestion, op3: e.target.value })} className="input" />
-          <input type="text" placeholder="Option D" value={newQuestion.op4} onChange={(e) => setNewQuestion({ ...newQuestion, op4: e.target.value })} className="input" />
-          <Button onClick={handleAddNewQuestion} disabled={adding} className="mt-2 w-full sm:w-auto">
+        <div className="flex flex-col gap-4 mt-2">
+          <input
+            type="text"
+            placeholder="Question"
+            value={newQuestion.question}
+            onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
+            className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+          />
+          <input
+            type="text"
+            placeholder="Option A"
+            value={newQuestion.op1}
+            onChange={(e) => setNewQuestion({ ...newQuestion, op1: e.target.value })}
+            className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+          />
+          <input
+            type="text"
+            placeholder="Option B"
+            value={newQuestion.op2}
+            onChange={(e) => setNewQuestion({ ...newQuestion, op2: e.target.value })}
+            className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+          />
+          <input
+            type="text"
+            placeholder="Option C"
+            value={newQuestion.op3}
+            onChange={(e) => setNewQuestion({ ...newQuestion, op3: e.target.value })}
+            className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+          />
+          <input
+            type="text"
+            placeholder="Option D"
+            value={newQuestion.op4}
+            onChange={(e) => setNewQuestion({ ...newQuestion, op4: e.target.value })}
+            className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+          />
+          <Button
+            onClick={handleAddNewQuestion}
+            disabled={adding}
+            className="mt-2 w-full sm:w-auto bg-gray-600 text-white hover:bg-gray-500"
+          >
             {adding ? "Adding..." : "Add Question"}
           </Button>
         </div>
@@ -141,11 +169,19 @@ const AssessmentPage = () => {
 
               <div className="flex gap-4">
                 <Link to={`/update-ques/${question.id}`}>
-                  <Button variant="secondary" className="w-full sm:w-auto">Edit</Button>
+                <PenBox
+          fill="blue"
+          size={20}
+          className="text-blue-300 cursor-pointer items-center"
+        />
                 </Link>
-                
-                <button onClick={() => handleDeleteQuestion(question.id)} disabled={deleteLoading[question.id]} className="ml-4 text-red-500 hover:text-red-700">
-                  Delete
+
+                <button
+                  onClick={() => handleDeleteQuestion(question.id)}
+                  disabled={deleteLoading[question.id]}
+                  className="ml-4 text-red-500 hover:text-red-700"
+                >
+                  <Trash />
                 </button>
               </div>
             </div>

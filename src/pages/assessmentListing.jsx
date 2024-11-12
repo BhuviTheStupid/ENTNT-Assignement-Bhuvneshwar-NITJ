@@ -5,7 +5,6 @@ import { BarLoader } from "react-spinners";
 import useFetch from "@/hooks/use-fetch";
 
 import { Button } from "@/components/ui/button";
-// import { Button } from "@/components/ui/button";
 import Input from "postcss/lib/input";
 import {
   Select,
@@ -44,12 +43,10 @@ const JobListing = () => {
     searchQuery,
   });
 
-  const{
+  const {
     data: applications,
     fn: fnApplicant,
-  } = useFetch(getApplications,{
-    
-  })
+  } = useFetch(getApplications, {});
 
   useEffect(() => {
     if (isLoaded) {
@@ -82,8 +79,8 @@ const JobListing = () => {
   }
 
   return (
-    <div className="">
-      <h1 className=" font-extrabold text-6xl sm:text-7xl text-center pb-8">
+    <div className="p-4 bg-gray-900 min-h-screen">
+      <h1 className="font-extrabold text-5xl sm:text-7xl text-center pb-8 text-white">
         Assessments
       </h1>
       
@@ -95,23 +92,23 @@ const JobListing = () => {
           type="text"
           placeholder="Search Assessments by Job Title.."
           name="search-query"
-          className="h-full flex-1  px-4 text-md"
+          className="bg-gray-800 text-white border-gray-600 h-full flex-1 px-4 text-md rounded-lg"
         />
-        <Button type="submit" className="h-full sm:w-28" variant="blue">
+        <Button type="submit" className="h-full sm:w-28 bg-blue-600 text-white hover:bg-blue-700" variant="blue">
           Search
         </Button>
       </form>
 
-      <div className="flex flex-col sm:flex-row gap-2">
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <Select value={location} onValueChange={(value) => setLocation(value)}>
-          <SelectTrigger>
+          <SelectTrigger className="bg-gray-700 text-white rounded-lg">
             <SelectValue placeholder="Filter by Location" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-gray-700 text-white">
             <SelectGroup>
               {State.getStatesOfCountry("IN").map(({ name }) => {
                 return (
-                  <SelectItem key={name} value={name}>
+                  <SelectItem key={name} value={name} className="bg-gray-600 text-white hover:bg-gray-500">
                     {name}
                   </SelectItem>
                 );
@@ -120,7 +117,7 @@ const JobListing = () => {
           </SelectContent>
         </Select>
         <Button
-          className="sm:w-1/2"
+          className="sm:w-1/2 bg-red-600 text-white hover:bg-red-700"
           variant="destructive"
           onClick={clearFilters}
         >
@@ -145,7 +142,7 @@ const JobListing = () => {
               );
             })
           ) : (
-            <div>No Assessments Found 😢</div>
+            <div className="text-center text-gray-400">No Assessments Found 😢</div>
           )}
         </div>
       )}

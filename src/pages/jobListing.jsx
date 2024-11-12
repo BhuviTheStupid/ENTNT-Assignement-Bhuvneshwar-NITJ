@@ -40,12 +40,10 @@ const JobListing = () => {
     searchQuery,
   });
 
-  const{
+  const {
     data: applications,
     fn: fnApplicant,
-  } = useFetch(getApplications,{
-    
-  })
+  } = useFetch(getApplications);
 
   useEffect(() => {
     if (isLoaded) {
@@ -77,35 +75,35 @@ const JobListing = () => {
   }
 
   return (
-    <div className="">
-      <h1 className="gradient-title font-extrabold text-6xl sm:text-7xl text-center pb-8">
+    <div className="p-4 bg-gray-900 min-h-screen">
+      <h1 className="gradient-title font-extrabold text-6xl sm:text-7xl text-center pb-8 text-indigo-400">
         Jobs
       </h1>
       <form
         onSubmit={handleSearch}
-        className="h-14 flex flex-row w-full gap-2 items-center mb-3"
+        className="h-8 flex flex-row w-full gap-2 items-center mb-3"
       >
         <Input
           type="text"
           placeholder="Search Jobs by Title.."
           name="search-query"
-          className="h-full flex-1  px-4 text-md"
+          className="h-full flex-1 px-4 text-md bg-gray-800 text-white border-gray-600"
         />
-        <Button type="submit" className="h-full sm:w-28" variant="blue">
+        <Button type="submit" className="h-full sm:w-28 bg-blue-600 text-white hover:bg-blue-700">
           Search
         </Button>
       </form>
 
       <div className="flex flex-col sm:flex-row gap-2">
-        <Select value={location} onValueChange={(value) => setLocation(value)}>
-          <SelectTrigger>
+        <Select value={location} onValueChange={(value) => setLocation(value)} className="bg-gray-700 text-white">
+          <SelectTrigger className="bg-gray-700 text-white">
             <SelectValue placeholder="Filter by Location" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-gray-700 text-white">
             <SelectGroup>
               {State.getStatesOfCountry("IN").map(({ name }) => {
                 return (
-                  <SelectItem key={name} value={name}>
+                  <SelectItem key={name} value={name} className="bg-gray-600 text-white hover:bg-gray-500">
                     {name}
                   </SelectItem>
                 );
@@ -115,7 +113,7 @@ const JobListing = () => {
         </Select>
 
         <Button
-          className="sm:w-1/2"
+          className="text-l sm:w-28 bg-red-600 text-white hover:bg-red-700"
           variant="destructive"
           onClick={clearFilters}
         >
@@ -140,7 +138,7 @@ const JobListing = () => {
               );
             })
           ) : (
-            <div>No Jobs Found 😢</div>
+            <div className="text-white">No Jobs Found 😢</div>
           )}
         </div>
       )}

@@ -80,22 +80,59 @@ const PostAssessment = () => {
   }
 
   return (
-    <div>
-      <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8">
+    <div className="p-4 bg-gray-900 min-h-screen">
+      <h1 className="font-extrabold text-5xl sm:text-7xl text-center pb-8 text-white">
         Create New Assessment
       </h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4 pb-0">
-        <Input placeholder="Question" {...register("question")} />
-        {errors.question && <p className="text-red-500">{errors.question.message}</p>}
+      
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-6 p-6 sm:p-10 rounded-lg bg-gray-800"
+      >
+        <div className="flex flex-col gap-4">
+          <Input
+            placeholder="Question"
+            {...register("question")}
+            className="bg-gray-700 text-white border-gray-600"
+          />
+          {errors.question && <p className="text-red-500">{errors.question.message}</p>}
+        </div>
 
-        <Input placeholder="Option1" {...register("op1")} />
-        {errors.op1 && <p className="text-red-500">{errors.op1.message}</p>}
-        <Input placeholder="Option2" {...register("op2")} />
-        {errors.op2 && <p className="text-red-500">{errors.op2.message}</p>}
-        <Input placeholder="Option3" {...register("op3")} />
-        {errors.op3 && <p className="text-red-500">{errors.op3.message}</p>}
-        <Input placeholder="Option4" {...register("op4")} />
-        {errors.op4 && <p className="text-red-500">{errors.op4.message}</p>}
+        <div className="flex flex-col gap-4">
+          <Input
+            placeholder="Option1"
+            {...register("op1")}
+            className="bg-gray-700 text-white border-gray-600"
+          />
+          {errors.op1 && <p className="text-red-500">{errors.op1.message}</p>}
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <Input
+            placeholder="Option2"
+            {...register("op2")}
+            className="bg-gray-700 text-white border-gray-600"
+          />
+          {errors.op2 && <p className="text-red-500">{errors.op2.message}</p>}
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <Input
+            placeholder="Option3"
+            {...register("op3")}
+            className="bg-gray-700 text-white border-gray-600"
+          />
+          {errors.op3 && <p className="text-red-500">{errors.op3.message}</p>}
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <Input
+            placeholder="Option4"
+            {...register("op4")}
+            className="bg-gray-700 text-white border-gray-600"
+          />
+          {errors.op4 && <p className="text-red-500">{errors.op4.message}</p>}
+        </div>
 
         <div className="flex gap-4 items-center">
           <Controller
@@ -109,15 +146,16 @@ const PostAssessment = () => {
                   setSelectedJob(value); // Update selectedJob when value changes
                   field.onChange(value); // Sync with react-hook-form
                 }}
+                className="bg-gray-700 text-white"
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-gray-700 text-white">
                   <SelectValue placeholder="Select Job" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-gray-700 text-white">
                   <SelectGroup>
                     {Array.isArray(jobs) && jobs.length > 0 ? (
                       jobs.map((job) => (
-                        <SelectItem key={job.id} value={job.id}>  {/* Use job.id instead of job.title */}
+                        <SelectItem key={job.id} value={job.id} className="bg-gray-600 text-white hover:bg-gray-500">
                           {job.title}
                         </SelectItem>
                       ))
@@ -137,7 +175,7 @@ const PostAssessment = () => {
           <p className="text-red-500">{errorCreateAssessment?.message}</p>
         )}
         {loadingCreateAssessment && <BarLoader width={"100%"} color="#36d7b7" />}
-        <Button type="submit" variant="blue" size="lg" className="mt-2">
+        <Button type="submit" variant="destructive" size="lg" className="mt-2 bg-gray-600 text-white hover:bg-gray-500">
           Submit
         </Button>
       </form>

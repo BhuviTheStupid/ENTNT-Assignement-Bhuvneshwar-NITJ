@@ -90,17 +90,17 @@ const UpdateQuestionPage = () => {
   };
 
   return (
-    <div className="flex flex-col gap-8 mt-5">
+    <div className="flex flex-col gap-8 mt-5 bg-gray-900 min-h-screen p-6">
       <h1 className="gradient-title font-extrabold pb-3 text-4xl sm:text-6xl text-white">Update Question</h1>
         
-      <div className="flex flex-col gap-4 mt-6">
+      <div className="flex flex-col gap-4 mt-6 h-auto w-full items-center mb-3 bg-gray-800 p-6 rounded-lg shadow-lg">
         <input
           type="text"
           name="question"
           placeholder="Enter updated question"
           value={questionData.question}
           onChange={handleChange}
-          className={`input input-bordered bg-gray-800 text-white border-gray-600 placeholder-gray-400 ${formErrors.question ? 'border-red-500' : ''}`}
+          className={`input input-bordered bg-gray-700 text-white border-gray-600 placeholder-gray-400 ${formErrors.question ? 'border-red-500' : ''}`}
         />
         {formErrors.question && <p className="text-red-500 text-sm">{formErrors.question}</p>}
 
@@ -110,7 +110,7 @@ const UpdateQuestionPage = () => {
           placeholder="Option A"
           value={questionData.op1}
           onChange={handleChange}
-          className={`input input-bordered bg-gray-800 text-white border-gray-600 placeholder-gray-400 ${formErrors.op1 ? 'border-red-500' : ''}`}
+          className={`input input-bordered bg-gray-700 text-white border-gray-600 placeholder-gray-400 ${formErrors.op1 ? 'border-red-500' : ''}`}
         />
         {formErrors.op1 && <p className="text-red-500 text-sm">{formErrors.op1}</p>}
 
@@ -120,7 +120,7 @@ const UpdateQuestionPage = () => {
           placeholder="Option B"
           value={questionData.op2}
           onChange={handleChange}
-          className={`input input-bordered bg-gray-800 text-white border-gray-600 placeholder-gray-400 ${formErrors.op2 ? 'border-red-500' : ''}`}
+          className={`input input-bordered bg-gray-700 text-white border-gray-600 placeholder-gray-400 ${formErrors.op2 ? 'border-red-500' : ''}`}
         />
         {formErrors.op2 && <p className="text-red-500 text-sm">{formErrors.op2}</p>}
 
@@ -130,7 +130,7 @@ const UpdateQuestionPage = () => {
           placeholder="Option C"
           value={questionData.op3}
           onChange={handleChange}
-          className={`input input-bordered bg-gray-800 text-white border-gray-600 placeholder-gray-400 ${formErrors.op3 ? 'border-red-500' : ''}`}
+          className={`input input-bordered bg-gray-700 text-white border-gray-600 placeholder-gray-400 ${formErrors.op3 ? 'border-red-500' : ''}`}
         />
         {formErrors.op3 && <p className="text-red-500 text-sm">{formErrors.op3}</p>}
 
@@ -140,13 +140,13 @@ const UpdateQuestionPage = () => {
           placeholder="Option D"
           value={questionData.op4}
           onChange={handleChange}
-          className={`input input-bordered bg-gray-800 text-white border-gray-600 placeholder-gray-400 ${formErrors.op4 ? 'border-red-500' : ''}`}
+          className={`input input-bordered bg-gray-700 text-white border-gray-600 placeholder-gray-400 ${formErrors.op4 ? 'border-red-500' : ''}`}
         />
         {formErrors.op4 && <p className="text-red-500 text-sm">{formErrors.op4}</p>}
-        
+
         <button
           onClick={handleUpdateQuestion}
-          className="mt-4 btn btn-primary"
+          className="mt-4 btn bg-blue-600 text-white hover:bg-blue-500"
         >
           Update Question
         </button>

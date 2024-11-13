@@ -81,23 +81,30 @@ const JobCard = ({
         <div className="text-sm sm:text-base">{job.requirements}</div>
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row gap-2 justify-between items-center">
-        <Edit2Icon
-          fill="blue"
-          size={20}
-          className="text-blue-300 cursor-pointer items-center"
+        {/* Edit Button (Boxed Style) */}
+        <div
           onClick={handleEditJob}
-        />
-        <Link to={`/job/${job.id}`} className="w-full sm:w-auto">
-          <Button variant="secondary" className="w-full sm:w-auto">
+          className="flex items-center justify-center border border-blue-300 rounded-full px-3 py-1 cursor-pointer hover:bg-blue-100"
+        >
+          <Edit2Icon size={20} />
+          <span className="ml-2 text-sm text-blue-300">Edit</span>
+        </div>
+        <div 
+          className="flex items-center justify-center border border-blue-300 rounded-full px-3 py-1 cursor-pointer hover:bg-blue-100"
+        >
+        <Link to={`/job/${job.id}`} className="w-full sm:w-auto items-center justify-center">
             More Details
-          </Button>
         </Link>
-        <Trash2Icon
-          fill="red"
-          size={20}
-          className="text-red-300 cursor-pointer items-center"
+        </div>
+
+        {/* Delete Button (Boxed Style) */}
+        <div
           onClick={handleDeleteJob}
-        />
+          className="flex items-center justify-center border border-red-300 rounded-full px-3 py-1 cursor-pointer hover:bg-red-100"
+        >
+          <Trash2Icon size={20} />
+          <span className="ml-2 text-sm text-red-300">Delete</span>
+        </div>
       </CardFooter>
 
       {/* Edit Job Modal (Popup) */}

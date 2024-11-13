@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { BarLoader } from "react-spinners";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
-import { ClipboardCheck, Trash, Edit, PenBox } from "lucide-react"; // Add the Edit icon here
+import { ClipboardCheck, Trash, PenBox, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import * as Dialog from "@radix-ui/react-dialog";
 import useFetch from "@/hooks/use-fetch";
-import { getSingleAssessment, getQuestionsForAssessment, deleteQues, addNewQuestion } from "@/api/apiAssessment";
+import { getSingleAssessment, getQuestionsForAssessment, deleteQues, addNewQuestion, updateQuestion } from "@/api/apiAssessment";
 import { getSingleJob } from "@/api/apiJobs";
 
 const AssessmentPage = () => {
@@ -22,8 +22,10 @@ const AssessmentPage = () => {
     op3: "",
     op4: ""
   });
+  const [editQuestion, setEditQuestion] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState({});
   const [adding, setAdding] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   const { loading: loadingAssessment, data: assessments, fn: fetchAssessment } = useFetch(getSingleAssessment, { assessment_id: id });
   const { loading: loadingQuestions, data: fetchedQuestions, fn: fetchQuestions } = useFetch(getQuestionsForAssessment, { assessment_id: id, job_id: assessments?.job_id });
@@ -78,11 +80,28 @@ const AssessmentPage = () => {
       if (result) {
         setQuestions([...questions, result]);
         setNewQuestion({ question: "", op1: "", op2: "", op3: "", op4: "" });
+        setIsAddOpen(false); // Close the add dialog after adding the question
       }
     } catch (error) {
       console.error("Error adding question:", error);
     } finally {
       setAdding(false);
+    }
+  };
+
+  const handleEditQuestion = async () => {
+    if (!editQuestion) return;
+    const token = "";
+    try {
+      const result = await updateQuestion(token, { ...editQuestion, assessment_id: id });
+      if (result) {
+        setQuestions((prev) =>
+          prev.map((q) => (q.id === editQuestion.id ? result : q))
+        );
+        setEditQuestion(null);
+      }
+    } catch (error) {
+      console.error("Error updating question:", error);
     }
   };
 
@@ -96,60 +115,64 @@ const AssessmentPage = () => {
         <h1 className="font-extrabold text-4xl sm:text-6xl text-white pb-3">
           {jobs?.name || "Untitled Assessment"}
         </h1>
-      </div>
-
-      <div className="flex justify-between">
-        <div className="flex gap-2">
-          <ClipboardCheck /> {assessments?.location || "Online"}
-        </div>
-      </div>
-
-      <div className="mt-6">
-        <h2 className="font-bold text-xl text-white">Add New Question</h2>
-        <div className="flex flex-col gap-4 mt-2">
-          <input
-            type="text"
-            placeholder="Question"
-            value={newQuestion.question}
-            onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
-            className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
-          />
-          <input
-            type="text"
-            placeholder="Option A"
-            value={newQuestion.op1}
-            onChange={(e) => setNewQuestion({ ...newQuestion, op1: e.target.value })}
-            className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
-          />
-          <input
-            type="text"
-            placeholder="Option B"
-            value={newQuestion.op2}
-            onChange={(e) => setNewQuestion({ ...newQuestion, op2: e.target.value })}
-            className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
-          />
-          <input
-            type="text"
-            placeholder="Option C"
-            value={newQuestion.op3}
-            onChange={(e) => setNewQuestion({ ...newQuestion, op3: e.target.value })}
-            className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
-          />
-          <input
-            type="text"
-            placeholder="Option D"
-            value={newQuestion.op4}
-            onChange={(e) => setNewQuestion({ ...newQuestion, op4: e.target.value })}
-            className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
-          />
-          <Button
-            onClick={handleAddNewQuestion}
-            disabled={adding}
-            className="mt-2 w-full sm:w-auto bg-gray-600 text-white hover:bg-gray-500"
-          >
-            {adding ? "Adding..." : "Add Question"}
-          </Button>
-        </div>
+        <Dialog.Root open={isAddOpen} onOpenChange={setIsAddOpen}>
+          <Dialog.Trigger asChild>
+            <Button className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-500">
+              <PlusCircle /> Add New Question
+            </Button>
+          </Dialog.Trigger>
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-30" />
+            <Dialog.Content className="fixed top-1/2 left-1/2 w-full max-w-lg p-6 bg-gray-800 rounded-lg transform -translate-x-1/2 -translate-y-1/2">
+              <Dialog.Title className="text-white font-bold">Add New Question</Dialog.Title>
+              <Dialog.Description className="text-gray-400">Enter the new question and options below.</Dialog.Description>
+              <div className="flex flex-col gap-4 mt-4">
+                <input
+                  type="text"
+                  placeholder="Question"
+                  value={newQuestion.question}
+                  onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
+                  className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+                />
+                <input
+                  type="text"
+                  placeholder="Option A"
+                  value={newQuestion.op1}
+                  onChange={(e) => setNewQuestion({ ...newQuestion, op1: e.target.value })}
+                  className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+                />
+                <input
+                  type="text"
+                  placeholder="Option B"
+                  value={newQuestion.op2}
+                  onChange={(e) => setNewQuestion({ ...newQuestion, op2: e.target.value })}
+                  className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+                />
+                <input
+                  type="text"
+                  placeholder="Option C"
+                  value={newQuestion.op3}
+                  onChange={(e) => setNewQuestion({ ...newQuestion, op3: e.target.value })}
+                  className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+                />
+                <input
+                  type="text"
+                  placeholder="Option D"
+                  value={newQuestion.op4}
+                  onChange={(e) => setNewQuestion({ ...newQuestion, op4: e.target.value })}
+                  className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+                />
+                <Button
+                  onClick={handleAddNewQuestion}
+                  disabled={adding}
+                  className="mt-2 bg-blue-600 text-white hover:bg-blue-500"
+                >
+                  {adding ? "Adding..." : "Add Question"}
+                </Button>
+              </div>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
       </div>
 
       {questions.length > 0 && (
@@ -168,13 +191,60 @@ const AssessmentPage = () => {
               </div>
 
               <div className="flex gap-4">
-                <Link to={`/update-ques/${question.id}`}>
-                <PenBox
-          fill="blue"
-          size={20}
-          className="text-blue-300 cursor-pointer items-center"
-        />
-                </Link>
+                <Dialog.Root open={Boolean(editQuestion)} onOpenChange={(open) => !open && setEditQuestion(null)}>
+                  <Dialog.Trigger asChild>
+                    <button onClick={() => setEditQuestion(question)}>
+                      <PenBox fill="blue" size={20} className="text-blue-300 cursor-pointer items-center" />
+                    </button>
+                  </Dialog.Trigger>
+                  <Dialog.Portal>
+                    <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-30" />
+                    <Dialog.Content className="fixed top-1/2 left-1/2 w-full max-w-lg p-6 bg-gray-800 rounded-lg transform -translate-x-1/2 -translate-y-1/2">
+                      <Dialog.Title className="text-white font-bold">Edit Question</Dialog.Title>
+                      <Dialog.Description className="text-gray-400">Edit the question and options below.</Dialog.Description>
+                      <div className="flex flex-col gap-4 mt-4">
+                        <input
+                          type="text"
+                          placeholder="Question"
+                          value={editQuestion?.question || ""}
+                          onChange={(e) => setEditQuestion({ ...editQuestion, question: e.target.value })}
+                          className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Option A"
+                          value={editQuestion?.op1 || ""}
+                          onChange={(e) => setEditQuestion({ ...editQuestion, op1: e.target.value })}
+                          className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Option B"
+                          value={editQuestion?.op2 || ""}
+                          onChange={(e) => setEditQuestion({ ...editQuestion, op2: e.target.value })}
+                          className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Option C"
+                          value={editQuestion?.op3 || ""}
+                          onChange={(e) => setEditQuestion({ ...editQuestion, op3: e.target.value })}
+                          className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Option D"
+                          value={editQuestion?.op4 || ""}
+                          onChange={(e) => setEditQuestion({ ...editQuestion, op4: e.target.value })}
+                          className="bg-gray-700 text-white p-3 rounded-md border-gray-600"
+                        />
+                        <Button onClick={handleEditQuestion} className="mt-2 bg-blue-600 text-white hover:bg-blue-500">
+                          Save Changes
+                        </Button>
+                      </div>
+                    </Dialog.Content>
+                  </Dialog.Portal>
+                </Dialog.Root>
 
                 <button
                   onClick={() => handleDeleteQuestion(question.id)}
